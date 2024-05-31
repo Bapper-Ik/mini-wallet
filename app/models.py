@@ -1,6 +1,7 @@
 from app.database import Base
 from sqlalchemy import TIMESTAMP, Column, String, Integer, BigInteger, ForeignKey
 from sqlalchemy.sql.expression import text
+from sqlalchemy.orm import relationship
 
 
 class Users(Base):
@@ -30,4 +31,5 @@ class UserWallet(Base):
     balance = Column(BigInteger, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
+    user = relationship("Users")
 

@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 
-@router.get('/get_all_wallets')
+@router.get('/get_all_wallets', response_model=list[my_schema.WalletResponseModel])
 async def get_all_wallets(db: Session = Depends(get_db), wallet_id: int = Depends(oauth2.get_current_user)):
     
     try:

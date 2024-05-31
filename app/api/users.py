@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
+from typing import List, Optional
 
 from app.database import get_db
 from app import models, my_schema
@@ -16,10 +17,11 @@ router = APIRouter(
 
 
 @router.get('/all_users')
-async def get_all_users(db: Session = Depends(get_db)):
+async def get_all_users(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     print(id)
     try:    
-        users = db.query(models.Users).all()
+        users = db.query(models.Users).filter(models.Users.first_name.contains(search)).limit(limit).offset(skip).all()
+        
         if not users:
             return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No users found!")
         return users
@@ -88,7 +90,7 @@ async def delete_user(db: Session = Depends(get_db), wallet_id: int = Depends(oa
         raise e
 
 
-@router.put('/update_user/{wallet_id}', response_model=my_schema.UpdateUser)
+@router.put('/update_user/{wallet_id}', response_model=my_schema.UserResponseModel)
 async def update_user(user: my_schema.UpdateUser, db: Session = Depends(get_db), wallet_id: int = Depends(oauth2.get_current_user)):
     
     try:

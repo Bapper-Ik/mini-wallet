@@ -7,18 +7,17 @@ from random import randint
 
 from enum import Enum
 
-
 class User(BaseModel):
     wallet_id: int = randint(0000000000, 9999999999)
     first_name: str
     last_name: str
     email: EmailStr
     phone: str
-
+    
 
 class CreateUser(User):
     password: str
-    bvn: str
+    bvn: int
     bvn_dob: str
     created_at: datetime
     
@@ -88,8 +87,19 @@ class WalletResponseModel(BaseModel):
     bank_name: str
     balance: int
     
-    class Config:
-        orm_mode = True
+    user: CreateUser
+    
+
+# class WalletResponseModel(BaseModel):
+#     wallet_ref: int
+#     wallet_name: str
+#     account_number: int
+#     account_name: str
+#     bank_name: str
+#     balance: int
+    
+#     class Config:
+#         orm_mode = True
 
 
 class TransferResponseModel(BaseModel):
