@@ -17,8 +17,7 @@ router = APIRouter(
 
 
 @router.get('/all_users')
-async def get_all_users(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    print(id)
+async def get_all_users(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: str | None = ""):
     try:    
         users = db.query(models.Users).filter(models.Users.first_name.contains(search)).limit(limit).offset(skip).all()
         
@@ -97,6 +96,9 @@ async def update_user(user: my_schema.UpdateUser, db: Session = Depends(get_db),
         user_query = db.query(models.Users).filter(models.Users.wallet_id == wallet_id)
         
         current_user = user_query.first()
+        
+        if not current_user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with {wallet_id} was not found!")
         
         # hashing password before updating
         hashed_password = hashing_password.hashing(current_user.password)

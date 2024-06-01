@@ -1,9 +1,10 @@
 from  app.utils.hashing_password import pwd_context
 import requests, base64, json
 
+import os
 
-api_key = 'MK_TEST_AT8WRK8Y7G'  
-client_secret = 'LYD5LRCKUQFXCTQBZVS6DJ4RABU4RZJ1'
+api_key = os.getenv("API_KEY")  
+client_secret = os.getenv("CLIENT_SECRET")
 
 auth_str = f'{api_key}:{client_secret}'
 auth_b64 = base64.b64encode(auth_str.encode()).decode()
